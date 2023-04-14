@@ -44,7 +44,7 @@ function TodoList() {
           <li key={index}>
             {todo.text} - Due: {new Date(todo.dueDate).toLocaleString()}{' '}
             {todo.date < currentTime && <span style={{ color: 'red' }}>Erledigen!</span>}
-            <button onClick={() => handleDelete(index)}>Delete</button>
+            <button onClick={() => handleDelete(index)}>löschen</button>
           </li>
         ))}
       </ul>
