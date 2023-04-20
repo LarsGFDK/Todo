@@ -28,7 +28,24 @@ function TodoList() {
   }
 
   function compareTodos(a, b) {
-    return new Date(a.date) - new Date(b.date);
+    const aDueDate = new Date(a.dueDate);
+    const bDueDate = new Date(b.dueDate);
+    const currentTime = new Date();
+
+    // Compare due dates
+    if (aDueDate < currentTime) {
+      a.status = 'Done';
+    } else {
+      a.status = 'ToDo';
+    }
+
+    if (bDueDate < currentTime) {
+      b.status = 'Done';
+    } else {
+      b.status = 'ToDo';
+    }
+
+    return aDueDate - bDueDate;
   }
 
   return (
@@ -43,8 +60,9 @@ function TodoList() {
         {todos.sort(compareTodos).map((todo, index) => (
           <li key={index}>
             {todo.text} - Due: {new Date(todo.dueDate).toLocaleString()}{' '}
-            {todo.date < currentTime && <span style={{ color: 'red' }}>Erledigen!</span>}
-            <button onClick={() => handleDelete(index)}>löschen</button>
+            {todo.status === 'Done' && <span style={{ color: 'red' }}>Erledigt!</span>}
+            {todo.status === 'ToDo' && <span style={{ color: 'green' }}>Bitte erledigen</span>}
+            <button onClick={() => handleDelete(index)}>Löschen</button>
           </li>
         ))}
       </ul>
