@@ -48,6 +48,20 @@ function TodoList() {
     return aDueDate - bDueDate;
   }
 
+  function groupTodosByDay(todos) {
+    const groups = {};
+    todos.forEach(todo => {
+      const dueDate = new Date(todo.dueDate).toLocaleDateString();
+      if (!groups[dueDate]) {
+        groups[dueDate] = [];
+      }
+      groups[dueDate].push(todo);
+    });
+    return groups;
+  }
+
+  const groups = groupTodosByDay(todos);
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -56,16 +70,21 @@ function TodoList() {
         <button type="submit">Add</button>
       </form>
       <div>Current time: {currentTime.toLocaleString()}</div>
-      <ul>
-        {todos.sort(compareTodos).map((todo, index) => (
-          <li key={index}>
-            {todo.text} - Due: {new Date(todo.dueDate).toLocaleString()}{' '}
-            {todo.status === 'Done' && <span style={{ color: 'red' }}>Erledigt!</span>}
-            {todo.status === 'ToDo' && <span style={{ color: 'green' }}>Bitte erledigen</span>}
-            <button onClick={() => handleDelete(index)}>Löschen</button>
-          </li>
-        ))}
-      </ul>
+      {Object.keys(groups).map(date => (
+        <div key={date} style={{ marginBottom: '1rem' }}>
+          <h2>{date}</h2>
+          <ul>
+            {groups[date].sort(compareTodos).map((todo, index) => (
+              <li key={index}>
+                {todo.text} - Due: {new Date(todo.dueDate).toLocaleString()}{' '}
+                {todo.status === 'Done' && <span style={{ color: 'red' }}>Erledigt!</span>}
+                {todo.status === 'ToDo' && <span style={{ color: 'green' }}>Bitte erledigen</span>}
+                <button onClick={() => handleDelete(index)}>Löschen</button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </div>
   );
 }
